@@ -22,7 +22,7 @@ namespace WPFApp.Views
         {
             var logo = new BitmapImage();
             logo.BeginInit();
-            logo.UriSource = new Uri(@$"C:\Users\woolf\Desktop\CardImages\{card.Rank}{card.Suit}.png");
+            logo.UriSource = new Uri($"pack://application:,,,/Resources/CardImages/{card.Rank}{card.Suit}.png");
             logo.EndInit();
 
             var image = new Image
