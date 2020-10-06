@@ -1,15 +1,12 @@
 ﻿using System.Windows;
 using Autofac;
-using Autofac.Core;
 using Autofac.Features.ResolveAnything;
+using AutoMapper;
 using Database.Context;
-using Database.Entities;
-using Database.Repository;
+using DataManager.Storages;
+using DataManager.Storages.StubStorage;
 using WPFApp.DataManager;
-using WPFApp.DataManager.Managers.DbManager;
-using WPFApp.DataManager.Managers.TestManager;
-using WPFApp.DataManager.Mapper;
-using WPFApp.ViewModels;
+using WPFApp.MapperProfiles;
 using WPFApp.Views;
 
 namespace WPFApp
@@ -38,35 +35,27 @@ namespace WPFApp
         {
             var container = new ContainerBuilder();
 
+
             container.RegisterSource(new AnyConcreteTypeNotAlreadyRegisteredSource());
 
             container.RegisterType<UserContext>()
                 .As<UserContext>();
 
-            container.RegisterType<CasinoRepository>()
-                .As<ICasinoRepository>();
+            container.Register<IConfigurationProvider>(_ =>
+                new MapperConfiguration(cfg => cfg.AddProfile(new UserProfile())));
+            container.RegisterType<Mapper>()
+                .As<Mapper>();
 
 #if TESTBUILD
-            container.RegisterType<TestCasinoManager>()
-                .As<ICasinoDataManager>();
+            container.RegisterType<StubUserStorage>()
+                .As<IUserStorage>();
 #else
-            container.RegisterType<UserContext>()
-                .As<UserContext>();
-
-            container.RegisterType<CasinoRepository>()
-                .As<ICasinoRepository>();
-
-            container.RegisterType<DbCasinoManager>()
-                .As<ICasinoDataManager>()
-                .WithParameters(new Parameter[]
-                {
-                    new TypedParameter(typeof(ICasinoRepository),
-                        new CasinoRepository(new UserContext())),
-
-                    new TypedParameter(typeof(AbstractMapper<User, UserViewModel>),
-                        new UserMapper())
-                });
+            container.RegisterType<DbUserStorage>()
+                .As<IUserStorage>();
 #endif
+
+            container.RegisterType<CasinoDataManager>()
+                .As<CasinoDataManager>();
 
             _container = container.Build();
         }

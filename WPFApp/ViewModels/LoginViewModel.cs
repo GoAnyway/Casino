@@ -15,7 +15,7 @@ namespace WPFApp.ViewModels
 
         private string _resultOfLoginTry;
 
-        public LoginViewModel(LoginView loginView, ICasinoDataManager dataManager)
+        public LoginViewModel(LoginView loginView, CasinoDataManager dataManager)
         {
             _loginView = loginView;
             LoginCommand = new LoginCommand(this, new LoginVerifier(dataManager));

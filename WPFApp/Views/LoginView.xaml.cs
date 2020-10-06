@@ -8,7 +8,7 @@ namespace WPFApp.Views
     {
         private readonly LoginViewModel _loginViewModel;
 
-        public LoginView(ICasinoDataManager dataManager)
+        public LoginView(CasinoDataManager dataManager)
         {
             InitializeComponent();
             var loginViewModel = new LoginViewModel(this, dataManager);

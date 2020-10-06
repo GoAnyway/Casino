@@ -1,61 +1,61 @@
-﻿namespace WPFApp.ViewModels
+﻿using System;
+
+namespace WPFApp.ViewModels
 {
     public class UserViewModel : BaseViewModel
     {
-        private int balance;
-        private int id;
+        private int _balance;
+        private Guid _id;
+        private string _nickname;
+        private string _password;
+        private string _username;
 
-        private string nickname;
-
-        private string password;
-        private string username;
-
-        public int Id
+        public Guid Id
         {
-            get => id;
+            get => _id;
             set
             {
-                id = value;
+                _id = value;
                 OnPropertyChanged();
             }
         }
 
         public string Username
         {
-            get => username;
+            get => _username;
             set
             {
-                username = value;
+                _username = value;
                 OnPropertyChanged();
             }
         }
 
         public string Password
         {
-            get => password;
+            get => _password;
             set
             {
-                password = value;
+                _password = value;
                 OnPropertyChanged();
             }
         }
 
         public string Nickname
         {
-            get => nickname;
+            get => _nickname;
             set
             {
-                nickname = value;
+                _nickname = value;
                 OnPropertyChanged();
             }
         }
 
         public int Balance
         {
-            get => balance;
+            get => _balance;
             set
             {
-                balance = value;
+                _balance = value;
                 OnPropertyChanged();
             }
         }

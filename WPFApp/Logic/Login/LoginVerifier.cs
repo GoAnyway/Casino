@@ -1,5 +1,5 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Threading.Tasks;
+using Models;
 using WPFApp.DataManager;
 using WPFApp.ViewModels;
 
@@ -7,17 +7,18 @@ namespace WPFApp.Logic.Login
 {
     public class LoginVerifier
     {
-        private readonly IEnumerable<UserViewModel> _users;
+        private readonly CasinoDataManager _manager;
 
-        public LoginVerifier(ICasinoDataManager manager)
+        public LoginVerifier(CasinoDataManager manager)
         {
-            _users = manager.GetAll();
+            _manager = manager;
         }
 
-        public UserViewModel VerifyUser(string username, string password)
+        public async Task<AuthenticationResultModel> VerifyUser(string username, string password)
         {
-            return _users.FirstOrDefault(_ => _.Username == username &&
-                                              _.Password == password);
+            var userForVerify = new UserViewModel {Username = username, Password = password};
+
+            return await _manager.GetResultOfLoginTry(userForVerify);
         }
     }
 }

@@ -27,20 +27,23 @@ namespace WPFApp.Commands.BlackJackViewCommands
 
         public async void Execute(object parameter)
         {
+            if (_hasBet || _blackJackCommunication.GameInProgress) return;
+
             var isBetCorrect = _betVerifier.VerifyBet(_blackJackViewModel.BetValue);
             if (isBetCorrect)
             {
-                if (_hasBet || _blackJackCommunication.GameInProgress) return;
-
-                var bet = int.Parse(_blackJackViewModel.BetValue);
-
                 _hasBet = true;
+                var bet = int.Parse(_blackJackViewModel.BetValue);
                 _blackJackViewModel.HasBetCancelled = false;
 
-                for (var i = 5; i >= 0 && !_blackJackViewModel.HasBetCancelled; i--)
+                for (var i = 50; i >= 0 && !_blackJackViewModel.HasBetCancelled; i--)
                 {
-                    _blackJackViewModel.BetTimer = i.ToString();
-                    await Task.Delay(1000);
+                    if (i % 10 == 0)
+                    {
+                        _blackJackViewModel.BetTimer = (i / 10).ToString();
+                    }
+
+                    await Task.Delay(100);
                 }
 
                 if (_blackJackViewModel.HasBetCancelled)

@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using System.Windows.Input;
 using System.Windows.Media;
+using Models;
 using Utils;
 using WPFApp.Logic.Login;
 using WPFApp.UserData;
@@ -28,26 +29,26 @@ namespace WPFApp.Commands.LoginViewCommands
 
         public async void Execute(object parameter)
         {
+            if (_isAuthorized) return;
+
             var login = _loginViewModel.Login;
             var password = _loginViewModel.Password;
-            var authorizedUser = _loginVerifier.VerifyUser(login, password);
+            var resultOfLoginTry = await _loginVerifier.VerifyUser(login, password);
 
-            if (authorizedUser != null)
+            if (resultOfLoginTry.Success)
             {
-                if (!_isAuthorized)
-                {
-                    ChangeControlsState(true, authorizedUser.Nickname);
+                _isAuthorized = true;
+                ChangeControlsState(true, resultOfLoginTry);
 
-                    AuthorizedUserData.Instance.AuthorizedUser.Nickname = authorizedUser.Nickname;
-                    AuthorizedUserData.Instance.AuthorizedUser.Balance = authorizedUser.Balance;
+                AuthorizedUserData.Instance.AuthorizedUser.Nickname = resultOfLoginTry.User.Nickname;
+                AuthorizedUserData.Instance.AuthorizedUser.Balance = resultOfLoginTry.User.Balance;
 
-                    await Task.Delay(2000);
-                    _loginViewModel.DialogResult = true;
-                }
+                await Task.Delay(2000);
+                _loginViewModel.DialogResult = true;
             }
             else
             {
-                ChangeControlsState(false);
+                ChangeControlsState(false, resultOfLoginTry);
             }
         }
 
@@ -55,21 +56,20 @@ namespace WPFApp.Commands.LoginViewCommands
         public event EventHandler CanExecuteChanged;
 #pragma warning restore CS0067
 
-        private async void ChangeControlsState(bool isEntered, string nickname = "")
+        private async void ChangeControlsState(bool isEntered, AuthenticationResultModel result)
         {
             _loginViewModel.ResultOfLoginTry = string.Empty;
             await Task.Delay(100);
 
             if (isEntered)
             {
-                _isAuthorized = true;
                 _loginViewModel.ForegroundColor = Brushes.Green;
-                _loginViewModel.ResultOfLoginTry = $"Welcome again, {nickname}!";
+                _loginViewModel.ResultOfLoginTry = $"Welcome again, {result.User.Nickname}!";
             }
             else
             {
                 _loginViewModel.ClearPassword();
-                _loginViewModel.ResultOfLoginTry = "Login failed. Please try again";
+                _loginViewModel.ResultOfLoginTry = result.Error.ErrorMessage;
             }
         }
     }

@@ -20,7 +20,8 @@
         <StackPanel Grid.Column="0" HorizontalAlignment="Left">
             <Button Content="Roulette"
 
-                    Width="55" Height="25" />
+                    Width="55" Height="25"
+                    Command="{Binding SwitchToRouletteViewModel}" />
             <Button Content="Crash"
 
                     Width="55" Height="25"
@@ -45,13 +46,13 @@
             <Label Content="{Binding Nickname}"
 
                    HorizontalAlignment="Center"
-                   Width="50"
+                   Width="100"
                    Height="25"
                    Foreground="White" />
             <Label Content="{Binding Balance}"
 
                    HorizontalAlignment="Center"
-                   Width="50"
+                   Width="100"
                    Height="25"
                    Foreground="White" />
         </StackPanel>

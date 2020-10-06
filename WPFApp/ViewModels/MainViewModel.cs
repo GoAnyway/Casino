@@ -15,6 +15,7 @@ namespace WPFApp.ViewModels
                 (sender, args) => OnPropertyChanged(args.PropertyName);
 
             SwitchToBlackJackViewModel = new SwitchToBlackJackViewModel(this);
+            SwitchToRouletteViewModel = new SwitchToRouletteViewModel(this);
         }
 
         public string Nickname => AuthorizedUserData.Instance.AuthorizedUser.Nickname;
@@ -30,7 +31,7 @@ namespace WPFApp.ViewModels
             }
         }
 
-        public ICommand GetUserDataCommand { get; set; }
         public ICommand SwitchToBlackJackViewModel { get; set; }
+        public ICommand SwitchToRouletteViewModel { get; set; }
     }
 }
